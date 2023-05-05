@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button class="sell">Sale an item</button>
+    <button class="view">View market</button>
+    <div class="form">
+   <form method="post" action="sell"> 
+ <input type="text" name="title" placeholder="name of item">
+ <input type="number" name="price" placeholder="price">
+ <input type="text" name="address" value="<%= myAddress %>">
+<button type="submit">Post</button>
+   </form>
+    </div>
+     <div class="market">
+        <% for(let i = 0; i < items.length; i++){ %>
+          <div>
+            <h4><%= items[i].title %></h4>
+            <p>$<%= items[i].price %></p>
+            <span><%= items[i].address %></span>
+            <button class="buy" value="<%= items[i]._id %>">Buy</button>
+            <button value="<%= items[i].address %>">Get Directions</button>
+          </div>
+            <% } %>
+     </div>
+    <script src="marketplace.js"></script>
+</body>
+</html>
