@@ -25,6 +25,7 @@
             <span><%= items[i].address %></span>
             <button class="buy" value="<%= items[i]._id %>">Buy</button>
             <button value="<%= items[i].address %>">Get Directions</button>
+            <button onclick="deleteItem('<%= items[i]._id %>')">Delete Items</button>
           </div>
             <% } %>
      </div>

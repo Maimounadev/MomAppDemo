@@ -5,6 +5,7 @@ module.exports = function(app, passport, db) {
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)
+    // starter api for my marketplace feature, users can buy and sell products. (more work to be done during the week, i also still have to work on the login page.)
     app.get('/', function(req, res) {
         res.render('signup.ejs');
     });
@@ -38,6 +39,14 @@ module.exports = function(app, passport, db) {
     }, (err, result) => {
       if (err) return res.send(err)
       res.send(result)
+    })
+  })
+
+  app.delete('/marketplace', (req, res) => {
+    const _id = ObjectId(req.body._id)
+    db.collection('marketplace').findOneAndDelete({ _id}, (err, result) => {
+      if (err) return res.send(500, err)
+      res.send('Message deleted!')
     })
   })
 

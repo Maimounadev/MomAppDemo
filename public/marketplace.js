@@ -27,4 +27,27 @@ function buyItem(e) {
         console.log(data)
         window.location.reload(true)
       })
+
+      
+}
+
+function deleteItem(_id) {
+  
+  
+    console.log('hi')
+    
+    
+    console.log(_id)
+    fetch('marketplace', {
+      method: 'delete',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        _id
+      })
+    }).then(function (response) {
+      window.location.reload()
+    })
+  ;
 }
