@@ -1,5 +1,3 @@
-// server.jsSIGNEDUP
-
 // set up ======================================================================
 // get all the tools we need
 var express  = require('express');
@@ -9,14 +7,19 @@ const MongoClient = require('mongodb').MongoClient
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
-
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
-
+const path = require('path')
+const http = require('http')
+const socketio = require('socket.io')
+const formatMessage = require('./utils/messages')
 var configDB = require('./config/database.js');
-
+const { userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./utils/users')
+const server = http.createServer(app)
+const io = socketio(server)
+const botName = 'Chat Bot'
 var db
 
 // configuration ===============================================================
@@ -25,7 +28,6 @@ mongoose.connect(configDB.url, (err, database) => {
   db = database
   require('./app/routes.js')(app, passport, db);
 }); // connect to our database
-console.log({passport})
 require('./config/passport')(passport); // pass passport for configuration
 
 // set up our express application
@@ -49,6 +51,67 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 
+
+// Socket.io Chat =======
+// RUN WHEN CLIENT CONNECTS ==========================
+io.on('connection', socket => {
+  socket.on('joinRoom', ({ username, room}) => {
+const user = userJoin(socket.id, username, room)
+
+
+socket.join(user.room)
+// WELCOME CURRENT USER =================
+  socket.emit('message', formatMessage(botName, 'Welcome to your group chat!'))
+
+
+// BROADCAST WHEN A USER CONNECTS ===================
+socket.broadcast
+.to(user.room)
+.emit(
+  'message',  
+  formatMessage(botName, `${user.username} has joined the chat`))
+
+  // SEND USERS AND ROOM INFO =======
+  io.to(user.room).emit('roomUsers', {
+    room: user.room,
+    users: getRoomUsers(user.room)
+  })
+})
+
+
+// LISTEN FOR ChatMessage ===============
+socket.on('chatMessage', (msg) => {
+  const user = getCurrentUser(socket.id)
+
+io.to(user.room).emit('message',  formatMessage(user.username, msg))
+})
+
+// PRIVATE ROOM ============
+socket.on('chatInviteRoom', (privateRoom) => {
+  const user = getCurrentUser(socket.id)
+  console.log(user, privateRoom)
+io.to(user.room).emit('inviteRoom',privateRoom)
+})
+
+
+// RUNS WHEN CLIENT DISCONNECTS =============
+socket.on("disconnect", () => {
+  const user = userLeave(socket.id);
+
+  if (user) {
+    io.to(user.room).emit(
+      "message",
+      formatMessage(botName, `${user.username} has left the chat`)
+    );
+    // Send users and room info
+    io.to(user.room).emit("roomUsers", {
+      room: user.room,
+      users: getRoomUsers(user.room)
+})     
+}
+})
+})
+
 // launch ======================================================================
-app.listen(port);
+server.listen(port);
 console.log('The magic happens on port ' + port);

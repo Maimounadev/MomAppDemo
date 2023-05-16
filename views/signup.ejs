@@ -4,32 +4,51 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="css/main.css" />
+      <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'>
+      <link rel="stylesheet" href="css/login.css">
   </head>
   <body>
-    <p>
-      Mommy Circle is a app designed for moms to interact with other mothers
-      about almost anything. Welcome!
-    </p>
-    <h1>Log In to Mommy Circle</h1>
-    <section class="login">
-      <form action="/signup" method="post">
-        <h2>Full name<input type="text" name="fullName" /></h2>
-        <h2>Email<input type="email" name="email" /></h2>
-        <h2>Address<input type="text" name="address" /></h2>
-        <h2>Mom Type</h2>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form action="/signup" method="post">
+			<h1>Create Account</h1>
+			<input type="text" placeholder="Your Address" name="address"/>
+			<input type="email" placeholder="Email" name="email" />
+			<input type="password" placeholder="Password" name="password"  />
+      <div>
         <input type="radio" name="type" value="first-time-mom">
         <label for="first-time-mom">First-time mom</label>
         <input type="radio" name="type" value="seasoned-mom">
         <label for="seasoned-mom">Seasoned mom</label>
-        <h2>Password<input type="password" name="password" /></h2>
-        <h3>Forgot password</h3>
-        <button type="submit">Sign up</button>
-      </form>
-    </section>
-    <section class="new">
-      <span>Already have an account? <a href="/login">Login</a>.</span>
-    </section>
-  </body>
+        </div>
+			<button type="submit">Sign Up</button>
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form action="/login" method="post">
+			<h1>Sign in</h1>
+			<input type="email" placeholder="Email" name="email"/>
+			<input type="password" placeholder="Password" name="password" />
+			<button type="submit">Sign In</button>
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Welcome Back!</h1>
+				<p>To keep connected with us please login with your personal info</p>
+				<button class="ghost" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Hello, Friend!</h1>
+				<p>Enter your personal details and start journey with us</p>
+				<button class="ghost" id="signUp">Sign Up</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- partial -->
+  <script src="login.js"></script>
+</body>
 </html>

@@ -1,4 +1,8 @@
 const { ObjectId } = require("mongodb");
+// Set environment variables for your credentials: PUT THESE SECRETS IN A .ENV FILE BEFORE PUSHING
+const accountSid = "AC2378d3d252c198052c00a4d3bafd6d38";
+const authToken = "f164e5c71364b823498b1407dc053c63";
+const client = require("twilio")(accountSid, authToken);
 
 module.exports = function(app, passport, db) {
 
@@ -9,7 +13,20 @@ module.exports = function(app, passport, db) {
     app.get('/', function(req, res) {
         res.render('signup.ejs');
     });
-    app.get('/marketplace', function(req, res) {
+
+    app.get('/groupChat', isLoggedIn, function(req,res){
+      res.render('chat.ejs', {
+        user: req.user.local
+      })
+    })
+
+    app.get('/enterChat', isLoggedIn, function(req,res){
+      res.render('enterChat.ejs', {
+        user: req.user.local
+      })
+    })
+
+    app.get('/marketplace', isLoggedIn, function(req, res) {
       db.collection('marketplace').find().toArray((err, items) => {
         if (err) return console.log(err)
         res.render('marketplace.ejs', {
@@ -17,32 +34,38 @@ module.exports = function(app, passport, db) {
           myAddress: req.user.local.address
         });
       })
-      
   });
-  app.post('/sell', (req, res) => {
-    const { title, price, address } = req.body 
-    db.collection('marketplace').save({title, price: Number(price), address, seller: req.user.local, sold: false}, (err, result) => {
+
+  app.post('/sell', isLoggedIn, (req, res) => {
+    const { title, price, address, description } = req.body 
+    db.collection('marketplace').save({title, price: Number(price), address, seller: req.user.local.email, description}, (err, result) => {
       if (err) return console.log(err)
       console.log('saved to database')
       res.redirect('/marketplace')
     })
   })
-  app.put('/buy', (req, res) => {
-    db.collection('marketplace')
-    .findOneAndUpdate({_id: ObjectId(req.body._id)}, {
-      $set: {
-        sold:true
-      }
-    }, {
-      sort: {_id: -1},
-      upsert: true
-    }, (err, result) => {
-      if (err) return res.send(err)
-      res.send(result)
-    })
-  })
 
-  app.delete('/marketplace', (req, res) => {
+   app.get('/purchased', isLoggedIn, function(req, res) {
+      db.collection('purchased').find({user: req.user.local.email}).toArray((err, data) => {
+        console.log(data)
+        if (err) return console.log(err)
+        res.render('purchased.ejs', {
+          data,
+          myAddress: req.user.local.address,
+        });
+      })
+  });
+
+  app.post('/purchase/:id', isLoggedIn, (req, res) => {
+  const item =  db.collection('marketplace').find({_id: ObjectId(req.params.id)}).toArray((err, item) => {
+    db.collection('purchased').save({item, purchasedOn: new Date(), user: req.user.local.email}, (err, result) => {
+      if (err) return res.send(err)
+      res.redirect('/purchased')
+})
+    })
+  });
+
+  app.delete('/marketplace', isLoggedIn, (req, res) => {
     const _id = ObjectId(req.body._id)
     db.collection('marketplace').findOneAndDelete({ _id}, (err, result) => {
       if (err) return res.send(500, err)
@@ -103,11 +126,23 @@ module.exports = function(app, passport, db) {
 
         // process the signup form
         app.post('/signup', passport.authenticate('local-signup', {
-            successRedirect : '/profile', // redirect to the secure profile section
+            successRedirect : '/welcome-msg', // redirect to the secure profile section
             failureRedirect : '/signup', // redirect back to the signup page if there is an error
             failureFlash : true // allow flash messages
         })
         );
+
+        app.get('/welcome-msg', function(req,res){
+           client.messages
+           .create({ body: "Welcome to my app", from: "+18886045109", to: "+16103875392" })
+           .then(message => {
+            console.log('message sent!', message.sid);
+            res.redirect('/profile')
+          })
+          .catch(error =>
+            console.error(error)
+          )
+        })
 
 // =============================================================================
 // UNLINK ACCOUNTS =============================================================
