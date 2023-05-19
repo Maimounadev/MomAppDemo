@@ -28,12 +28,14 @@
         <section class="filter-section">
           <button class="sell">Sell an item</button>
           <div class="form">
-            <form method="post" action="/sell">
+            <form method="post" action="/sell" enctype="multipart/form-data">
+
               <input type="text" name="title" placeholder="name of item" />
               <input type="text" name="description" placeholder="description of item" />
               <input type="number" name="price" placeholder="price" />
               <input type="text" name="address" value="<%= myAddress %>" />
-              <button type="submit">Post</button>
+              <input type="file" name="file-to-upload">
+              <button type="submit" value="Upload">Post</button>
             </form>
           </div>
           <h6>Filters</h6>
@@ -93,7 +95,7 @@
       <section class="results-section results--grid">
         <% for(let i = 0; i < items.length; i++){ %>
         <div class="profile">
-          <div class="profile__image"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/567707/dog.png" alt="Doggo"/></div>
+          <div class="profile__image"><img src="<%= items[i].imgPath %>" alt="Doggo"/></div>
           <div class="profile__info">
             <h3><%= items[i].title %></h3>
             <p class="profile__info__extra"><%= items[i].description %></p>

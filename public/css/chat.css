@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
 :root {
-	--dark-color-a: grey;
-	--dark-color-b: rgb(98, 98, 98);
-	--light-color: #d8d8d8;
-	--success-color: #5cb85c;
-	--error-color: #d9534f;
+	--dark-color-a: #cf6e1a;
+	--dark-color-b: orange;
+	--light-color: #f2f2f2;
+	--success-color: #27ae60;
+	--error-color: #c0392b;
 }
 
 * {
@@ -31,11 +31,17 @@ a {
 
 .btn {
 	cursor: pointer;
-	padding: 5px 15px;
-	background: var(--light-color);
-	color: var(--dark-color-a);
-	border: 0;
+	padding: 10px 20px;
+	background: var(--dark-color-a);
+	color: #fff;
+	border: none;
+	border-radius: 5px;
 	font-size: 17px;
+	transition: background 0.3s ease;
+}
+
+.btn:hover {
+	background: var(--dark-color-b);
 }
 
 /* Chat Page */
@@ -45,6 +51,7 @@ a {
 	background: #fff;
 	margin: 30px auto;
 	overflow: hidden;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .chat-header {
@@ -66,13 +73,15 @@ a {
 .chat-sidebar {
 	background: var(--dark-color-b);
 	color: #fff;
-	padding: 20px 20px 60px;
+	padding: 20px;
 	overflow-y: scroll;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	border-bottom-left-radius: 5px;
 }
 
 .chat-sidebar h2 {
 	font-size: 20px;
-	background: rgba(0, 0, 0, 0.1);
+	background: var(--dark-color-a);
 	padding: 10px;
 	margin-bottom: 20px;
 }
@@ -89,13 +98,15 @@ a {
 	padding: 30px;
 	max-height: 500px;
 	overflow-y: scroll;
+	background: var(--light-color);
 }
 
 .chat-messages .message {
 	padding: 10px;
 	margin-bottom: 15px;
-	background-color: var(--light-color);
+	background-color: #fff;
 	border-radius: 5px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .chat-messages .message .meta {
@@ -107,83 +118,12 @@ a {
 }
 
 .chat-messages .message .meta span {
-	color: #777;
+	color: orange;
 }
 
 .chat-form-container {
-	padding: 20px 30px;
-	background-color: var(--dark-color-a);
-}
-
-.chat-form-container form {
-	display: flex;
-}
-
-.chat-form-container input[type='text'] {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	flex: 1;
-}
-
-/* Join Page */
-.join-container {
-	max-width: 500px;
-	margin: 80px auto;
-	color: #fff;
-}
-
-.join-header {
-	text-align: center;
 	padding: 20px;
-	background: var(--dark-color-a);
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-}
-
-.join-main {
-	padding: 30px 40px;
-	background: var(--dark-color-b);
-}
-
-.join-main p {
-	margin-bottom: 20px;
-}
-
-.join-main .form-control {
-	margin-bottom: 20px;
-}
-
-.join-main label {
-	display: block;
-	margin-bottom: 5px;
-}
-
-.join-main input[type='text'] {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
-}
-
-.join-main select {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
-}
-
-.join-main .btn {
-	margin-top: 20px;
-	width: 100%;
-}
-
-@media (max-width: 700px) {
-	.chat-main {
-		display: block;
-	}
-
-	.chat-sidebar {
-		display: none;
-	}
-}
+	background-color: var(--light-color);
+	border-bottom-right-radius: 5px;
+	
+}  

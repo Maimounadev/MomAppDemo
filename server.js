@@ -21,12 +21,14 @@ const server = http.createServer(app)
 const io = socketio(server)
 const botName = 'Chat Bot'
 var db
+const multer = require('multer');
+
 
 // configuration ===============================================================
 mongoose.connect(configDB.url, (err, database) => {
   if (err) return console.log(err)
   db = database
-  require('./app/routes.js')(app, passport, db);
+  require('./app/routes.js')(app, passport, db, multer);
 }); // connect to our database
 require('./config/passport')(passport); // pass passport for configuration
 

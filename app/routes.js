@@ -1,10 +1,23 @@
 const { ObjectId } = require("mongodb");
 // Set environment variables for your credentials: PUT THESE SECRETS IN A .ENV FILE BEFORE PUSHING
 const accountSid = "AC2378d3d252c198052c00a4d3bafd6d38";
-const authToken = "f164e5c71364b823498b1407dc053c63";
+const authToken = "646c251363ef5ad393f95e4d5a0e8681";
 const client = require("twilio")(accountSid, authToken);
+const { Configuration, OpenAIApi } = require('openai')
 
-module.exports = function(app, passport, db) {
+
+module.exports = function(app, passport, db, multer) {
+// Image Upload Code =========================================================================
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images/uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + ".png")
+  }
+});
+var upload = multer({storage: storage});
+
 
 // normal routes ===============================================================
 
@@ -36,14 +49,19 @@ module.exports = function(app, passport, db) {
       })
   });
 
-  app.post('/sell', isLoggedIn, (req, res) => {
+  app.post('/sell', isLoggedIn,upload.single('file-to-upload'), (req, res) => {
     const { title, price, address, description } = req.body 
-    db.collection('marketplace').save({title, price: Number(price), address, seller: req.user.local.email, description}, (err, result) => {
+    db.collection('marketplace').save({title, price: Number(price), address, seller: req.user.local.email, description, imgPath: 'images/uploads/' + req.file.filename}, (err, result) => {
       if (err) return console.log(err)
       console.log('saved to database')
       res.redirect('/marketplace')
     })
   })
+
+  
+
+  
+  
 
    app.get('/purchased', isLoggedIn, function(req, res) {
       db.collection('purchased').find({user: req.user.local.email}).toArray((err, data) => {
@@ -131,6 +149,29 @@ module.exports = function(app, passport, db) {
             failureFlash : true // allow flash messages
         })
         );
+        // open ai 
+
+        app.post('/getAi', async (req, res) => {
+          console.log(req.body.ingredient)
+      
+          const configuration = new Configuration({
+            apiKey: process.env.OPENAI_API_KEY,
+          });
+          const openai = new OpenAIApi(configuration);
+          const ingredients = req.body.ingredient
+          let prompt = 'Give me a recipe using only these ingredients:'
+          ingredients.forEach(food => prompt += food + ',')
+          console.log(prompt)
+          const completion = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: prompt }],
+          });
+          const recipe = completion.data.choices[0].message.content
+          console.log(completion.data.choices[0].message);
+          res.render('recipe.ejs', {recipe})
+        })
+      
+      
 
         app.get('/welcome-msg', function(req,res){
            client.messages
