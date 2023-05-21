@@ -2,6 +2,7 @@
   "name": "node-authentication",
   "main": "server.js",
   "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
     "bcrypt": "*",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.3",
@@ -10,6 +11,8 @@
     "ejs": "~2.5.2",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "fullcalendar": "^6.1.7",
+    "googleapis": "^105.0.0",
     "lodash": "^4.17.20",
     "method-override": "~2.3.6",
     "moment": "^2.29.4",

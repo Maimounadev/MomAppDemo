@@ -6,22 +6,47 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
     />
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,500,500i,700" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css'>
-    <link rel="stylesheet" href="css/map.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,300i,500,500i,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css"
+    />
+    <!-- <link rel="stylesheet" href="./css/map.css" /> -->
     <link rel="stylesheet" href="css/market-grid.css" />
   </head>
   <body>
-    <input class="variation" id="bluepurple" type="radio" value="1" name="color" checked="checked"/>
-<label for="bluepurple"></label>
-<input class="variation" id="pinkaru" type="radio" value="5" name="color"/>
-<label for="pinkaru"></label>
+    <input
+      class="variation"
+      id="bluepurple"
+      type="radio"
+      value="1"
+      name="color"
+      checked="checked"
+    />
+    <label for="bluepurple"></label>
+    <input class="variation" id="pinkaru" type="radio" value="5" name="color" />
+    <label for="pinkaru"></label>
     <main>
       <section class="results-header">
         <h1>Purchase items near you.</h1>
+
+        <!-- test for  -->
+
         <div class="results-header__option">
-          <div class="option__button option--grid selected"><span></span><span></span><span></span><span></span><span>Grid</span></div>
-          <div class="option__button option--list"><span></span><span></span><span></span><span>List</span></div>
+          <div class="option__button option--grid selected">
+            <span></span><span></span><span></span><span></span
+            ><span>Grid</span>
+          </div>
+          <div class="option__button option--list">
+            <span></span><span></span><span></span><span>List</span>
+          </div>
         </div>
       </section>
       <div class="filter-section__wrapper">
@@ -29,12 +54,15 @@
           <button class="sell">Sell an item</button>
           <div class="form">
             <form method="post" action="/sell" enctype="multipart/form-data">
-
               <input type="text" name="title" placeholder="name of item" />
-              <input type="text" name="description" placeholder="description of item" />
+              <input
+                type="text"
+                name="description"
+                placeholder="description of item"
+              />
               <input type="number" name="price" placeholder="price" />
               <input type="text" name="address" value="<%= myAddress %>" />
-              <input type="file" name="file-to-upload">
+              <input type="file" name="file-to-upload" />
               <button type="submit" value="Upload">Post</button>
             </form>
           </div>
@@ -43,27 +71,30 @@
             <h5 class="filters__title">Max Price</h5>
             <div class="filters__item">
               <div class="checkbox">
-                <input id="checkbox-1" type="checkbox"/>
-                <label for="checkbox-1">$10<span class="box"></span>
-                  <div class="tooltip top" data-tooltip="Everything under $10"><span><i class="icon-info"></i></span></div>
+                <input class="priceFilter"  value="10" id="checkbox-1" type="checkbox" />
+                <label for="checkbox-1"
+                  >$10<span class="box"></span>
+                  <div class="tooltip top" data-tooltip="Everything under $10">
+                    <span><i class="icon-info"></i></span>
+                  </div>
                 </label>
               </div>
             </div>
             <div class="filters__item">
               <div class="checkbox">
-                <input id="checkbox-2" type="checkbox" checked="checked"/>
+                <input class="priceFilter"  value="25" id="checkbox-2" type="checkbox" checked="checked" />
                 <label for="checkbox-2">$25<span class="box"></span></label>
               </div>
             </div>
             <div class="filters__item">
               <div class="checkbox">
-                <input id="checkbox-3" type="checkbox"/>
+                <input class="priceFilter"  value="50" id="checkbox-3" type="checkbox" />
                 <label for="checkbox-3">$50<span class="box"></span></label>
               </div>
             </div>
             <div class="filters__item">
               <div class="checkbox">
-                <input id="checkbox-4" type="checkbox"/>
+                <input  class="priceFilter"  value="100" id="checkbox-4" type="checkbox" />
                 <label for="checkbox-4">$100<span class="box"></span></label>
               </div>
             </div>
@@ -72,20 +103,26 @@
             <h5 class="filters__title">Locations</h5>
             <div class="filters__item">
               <div class="checkbox">
-                <input id="checkbox-5" type="checkbox"/>
-                <label for="checkbox-5">Location 1<span class="box"></span></label>
+                <input id="checkbox-5" type="checkbox" />
+                <label for="checkbox-5"
+                  >Location 1<span class="box"></span
+                ></label>
               </div>
             </div>
             <div class="filters__item">
               <div class="checkbox">
-                <input id="checkbox-6" type="checkbox" checked="checked"/>
-                <label for="checkbox-6">Location 1<span class="box"></span></label>
+                <input id="checkbox-6" type="checkbox" checked="checked" />
+                <label for="checkbox-6"
+                  >Location 1<span class="box"></span
+                ></label>
               </div>
             </div>
             <div class="filters__item">
               <div class="checkbox">
-                <input id="checkbox-7" type="checkbox"/>
-                <label for="checkbox-7">Location 3<span class="box"></span></label>
+                <input id="checkbox-7" type="checkbox" />
+                <label for="checkbox-7"
+                  >Location 3<span class="box"></span
+                ></label>
               </div>
             </div>
           </div>
@@ -95,7 +132,9 @@
       <section class="results-section results--grid">
         <% for(let i = 0; i < items.length; i++){ %>
         <div class="profile">
-          <div class="profile__image"><img src="<%= items[i].imgPath %>" alt="Doggo"/></div>
+          <div class="profile__image">
+            <img src="<%= items[i].imgPath %>" alt="Doggo" />
+          </div>
           <div class="profile__info">
             <h3><%= items[i].title %></h3>
             <p class="profile__info__extra"><%= items[i].description %></p>
@@ -110,19 +149,26 @@
           </div>
 
           <div class="profile__cta">
+            <h1><%= items[i]._id %></h1>
+            <h1><%= boughtItems[0] %></h1>
+            <h1><%= boughtItems %></h1>
+            <% if(boughtItems.includes(items[i]._id)){ %>
+            <button type="submit" class="button buy">Purchased</button>
+
+            <% } else{ %>
             <form action="/purchase/<%= items[i]._id%>" method="post">
-            <button type="submit" class="button buy">Purchase Item</button>
-          </form>
+              <button type="submit" class="button buy">Purchase Item</button>
+            </form>
+            <% } %>
           </div>
         </div>
         <% } %>
       </section>
-
     </main>
-  
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjF4bqBu5j4eX7WU_EUnvlFRTkvs8iLac&libraries=places"></script>
     <script src="marketplace.js"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   </body>
 </html>
