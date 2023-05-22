@@ -5,6 +5,7 @@ const accountSid = "AC2378d3d252c198052c00a4d3bafd6d38";
 const authToken = "646c251363ef5ad393f95e4d5a0e8681";
 const client = require("twilio")(accountSid, authToken);
 const { Configuration, OpenAIApi } = require("openai");
+require('dotenv').config();
 
 module.exports = function (app, passport, db, multer) {
   // Image Upload Code =========================================================================
@@ -86,17 +87,22 @@ module.exports = function (app, passport, db, multer) {
     );
   });
 
-  app.get("/myListings", isLoggedIn, function (req, res) {
+  app.get("/listings", isLoggedIn, function (req, res) {
     db.collection("marketplace")
       .find({ seller: req.user.local.email })
       .toArray((err, data) => {
         console.log(data);
         if (err) return console.log(err);
-        res.render("myListings.ejs", {
+        db.collection("purchased")
+          .find()
+          .toArray((err, result) => {
+            if (err) return console.log(err);
+        res.render("purchasedTwo.ejs", {
           data,
+          result,
           myAddress: req.user.local.address
         });
-        
+      })
       });
   });
 
