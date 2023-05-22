@@ -56,11 +56,11 @@ priceFilterInputs.forEach(function (element) {
 });
 
 function filterByPrice(e) {
-  // e.preventDefault()
+   e.preventDefault()
   let price = e.target.value;
-  let filterPage = window.location.href + "/" + price;
+  // let filterPage = window.location.href + "/" + price;
 
-  fetch("marketplace/" + price, {
+  fetch("marketplace?price=" + price, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
@@ -73,5 +73,7 @@ function filterByPrice(e) {
     .then(function (data) {
       console.log(data)
       window.location.assign(data.url);
+      
     });
+    console.log(data.url)
 }

@@ -40,8 +40,9 @@ module.exports = function (app, passport, db, multer) {
 
   app.get("/marketplace", isLoggedIn, function (req, res) {
     let boughtItems = [];
+    let filter = req.query.price ? {price: parseInt(req.query.price )} : undefined
     db.collection("marketplace")
-      .find()
+      .find( filter)
       .toArray((err, items) => {
         db.collection("purchased")
           .find()
@@ -60,28 +61,7 @@ module.exports = function (app, passport, db, multer) {
       });
   });
 
-  app.get("/marketplace/:price", isLoggedIn, function (req, res) {
-    let boughtItems = [];
-    db.collection("marketplace")
-      .find({ price: parseInt(req.params.price )})
-      .toArray((err, items) => {
-        db.collection("purchased")
-          .find()
-          .toArray((err, result) => {
-            if (err) return console.log(err);
-            for (let i = 0; i < result.length; i++) {
-              boughtItems.push(result[i].item[0]._id);
-            }
-            res.render("marketplace.ejs", {
-              items,
-              result,
-              boughtItems: boughtItems,
-              myAddress: req.user.local.address,
-            });
-          
-          });
-      });
-  });
+ 
 
   app.post("/sell", isLoggedIn, upload.single("file-to-upload"), (req, res) => {
     const { title, price, address, description } = req.body;
@@ -206,79 +186,97 @@ module.exports = function (app, passport, db, multer) {
   // Display the calendar page
   const { ObjectId } = require("mongodb");
 
-  app.get("/calendar", isLoggedIn, function (req, res) {
-    // Retrieve events from the database
-    db.collection("events")
-      .find()
-      .toArray((err, events) => {
-        if (err) {
-          console.log(err);
-          return res
-            .status(500)
-            .send("Error retrieving events from the database.");
-        }
-        res.render("calendar.ejs", { events });
-      });
-  });
+  // app.get("/calendar", isLoggedIn, function (req, res) {
+  //   // Retrieve events from the database
+  //   db.collection("events")
+  //     .find()
+  //     .toArray((err, events) => {
+  //       if (err) {
+  //         console.log(err);
+  //         return res
+  //           .status(500)
+  //           .send("Error retrieving events from the database.");
+  //       }
+  //       res.render("calendar.ejs", { events });
+  //     });
+  // });
 
-  app.post("/calendar/event", isLoggedIn, function (req, res) {
-    const { title, date, description } = req.body;
+  // app.post("/calendar/event", isLoggedIn, function (req, res) {
+  //   const { title, date, description } = req.body;
 
-    // Save the new event to the database
-    db.collection("events").insertOne(
-      { title, date, description },
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send("Error saving event to the database.");
-        }
-        console.log("Event saved to the database");
-        res.redirect("/calendar");
-      }
-    );
-  });
+  //   // Save the new event to the database
+  //   db.collection("events").insertOne(
+  //     { title, date, description },
+  //     (err, result) => {
+  //       if (err) {
+  //         console.log(err);
+  //         return res.status(500).send("Error saving event to the database.");
+  //       }
+  //       console.log("Event saved to the database");
+  //       res.redirect("/calendar");
+  //     }
+  //   );
+  // });
 
-  app.delete("/calendar/event/:id", isLoggedIn, function (req, res) {
-    const eventId = req.params.id;
+  // app.delete("/calendar/event/:id", isLoggedIn, function (req, res) {
+  //   const eventId = req.params.id;
 
-    // Delete the event from the database
-    db.collection("events").deleteOne(
-      { _id: ObjectId(eventId) },
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          return res
-            .status(500)
-            .send("Error deleting event from the database.");
-        }
-        res.send("Event deleted!");
-      }
-    );
-  });
+  //   // Delete the event from the database
+  //   db.collection("events").deleteOne(
+  //     { _id: ObjectId(eventId) },
+  //     (err, result) => {
+  //       if (err) {
+  //         console.log(err);
+  //         return res
+  //           .status(500)
+  //           .send("Error deleting event from the database.");
+  //       }
+  //       res.send("Event deleted!");
+  //     }
+  //   );
+  // });
 
   // ...
+  app.get("/getAi", function (req, res) {
+    res.render("Ai.ejs",{
+      answer: null
+    });
+  });
+
 
   // open ai
 
   app.post("/getAi", async (req, res) => {
-    console.log(req.body.ingredient);
-
-    const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-    const openai = new OpenAIApi(configuration);
-    const ingredients = req.body.ingredient;
-    let prompt = "Give me a recipe using only these ingredients:";
-    ingredients.forEach((food) => (prompt += food + ","));
-    console.log(prompt);
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-    });
-    const recipe = completion.data.choices[0].message.content;
-    console.log(completion.data.choices[0].message);
-    res.render("recipe.ejs", { recipe });
+    console.log(req.body);
+    
+  
+    try {
+      console.log('key' ,process.env.OPENAI_API_KEY)
+      const configuration = new Configuration({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+  
+      const openai = new OpenAIApi(configuration);
+      const prompt = req.body.question;
+      // let prompt = "How much Tylenol can I give a 6-month-old:";
+      
+      console.log(prompt);
+  
+      const completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt }],
+      });
+  
+      const answer = completion.data.choices[0].message.content;
+      console.log(completion.data.choices[0].message);
+  
+      res.render("Ai.ejs", { answer });
+    } catch (error) {
+      console.error("Error generating dose:", error);
+      res.status(500).json({ error: "Failed to generate dose" });
+    }
   });
+  // ===================================================
 
   app.get("/welcome-msg", function (req, res) {
     client.messages

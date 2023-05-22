@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Chat</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <h1>AI Chat</h1>
+  <div id="chat-container">
+    <div id="messages"></div>
+    <div id="input-container">
+      <form action="/getAi" method="post">
+      <input type="text" id="user-input" name="question" placeholder="Ask a question">
+      <button class="sendMessage" type="submit">Send</button>
+    </form>
+    </div>
+  </div>
+  <% if(answer){ %>
+  <%= answer %>
+ <% } %>
+
+  <script src="Ai.js"></script>
+</body>
+</html>
+

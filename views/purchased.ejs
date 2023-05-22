@@ -11,7 +11,7 @@
 <section class="container">
     <% for(let i = 0; i < data.length; i++){%>
   <div class="profile">
-    <img src="http://via.placeholder.com/400x400" class="image" />
+    <img src="<%= data[i].item[0].imgPath %>" class="image" />
     <h2 class="name"><%= data[i].item[0].title %></h2>
     <h3 class="handle"><%= data[i].item[0].seller %></h3>
     <h4 class="location">📍 <%= data[i].item[0].address %></h4>

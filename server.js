@@ -1,5 +1,6 @@
 // set up ======================================================================
 // get all the tools we need
+require('dotenv').config({ path: 'config/.env' });
 var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 8082;
@@ -24,6 +25,7 @@ var db
 const multer = require('multer');
 
 
+
 // configuration ===============================================================
 mongoose.connect(configDB.url, (err, database) => {
   if (err) return console.log(err)
@@ -41,6 +43,8 @@ app.use(express.static('public'))
 
 
 app.set('view engine', 'ejs'); // set up ejs for templating
+
+
 
 // required for passport
 app.use(session({
