@@ -3,10 +3,19 @@
 <head>
   <title>AI Chat</title>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="css/Ai.css">
 </head>
 <body>
-  <h1>AI Chat</h1>
+  <div class="navigation-bar">
+    <ul>
+        <li class="active"><a href="index.html">Home<span class="underline"></span></a></li>
+        <li><a href="/getAi">Ask Questions<span class="underline"></span></a></li>
+        <li><a href="/enterChat">Chat with other moms<span class="underline"></span></a></li>
+        <li><a href="/marketplace">Shop<span class="underline"></span></a></li>
+    </ul>
+  <h1>Ask Us Mommy Related Questions!</h1>
   <div id="chat-container">
+    <img src="img/animatedMom.png" alt="Image description">
     <div id="messages"></div>
     <div id="input-container">
       <form action="/getAi" method="post">

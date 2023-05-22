@@ -107,9 +107,8 @@ input {
 	transition: all 0.6s ease-in-out;
 }
 .form-container button {
-margin: 8px 0;
+	margin: 8px 0;
 }
-
 
 .sign-in-container {
 	left: 0;
@@ -230,28 +229,26 @@ margin: 8px 0;
 }
 
 footer {
-    background-color: #222;
-    color: #fff;
-    font-size: 14px;
-    bottom: 0;
-    position: fixed;
-    left: 0;
-    right: 0;
-    text-align: center;
-    z-index: 999;
+	background-color: #222;
+	color: #fff;
+	font-size: 14px;
+	bottom: 0;
+	position: fixed;
+	left: 0;
+	right: 0;
+	text-align: center;
+	z-index: 999;
 }
 
 footer p {
-    margin: 10px 0;
+	margin: 10px 0;
 }
 
 footer i {
-    color: red;
+	color: red;
 }
 
 footer a {
-    color: #3c97bf;
-    text-decoration: none;
-} 
-
-
+	color: #3c97bf;
+	text-decoration: none;
+}

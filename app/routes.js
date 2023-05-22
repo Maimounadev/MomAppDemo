@@ -186,55 +186,6 @@ module.exports = function (app, passport, db, multer) {
   // Display the calendar page
   const { ObjectId } = require("mongodb");
 
-  // app.get("/calendar", isLoggedIn, function (req, res) {
-  //   // Retrieve events from the database
-  //   db.collection("events")
-  //     .find()
-  //     .toArray((err, events) => {
-  //       if (err) {
-  //         console.log(err);
-  //         return res
-  //           .status(500)
-  //           .send("Error retrieving events from the database.");
-  //       }
-  //       res.render("calendar.ejs", { events });
-  //     });
-  // });
-
-  // app.post("/calendar/event", isLoggedIn, function (req, res) {
-  //   const { title, date, description } = req.body;
-
-  //   // Save the new event to the database
-  //   db.collection("events").insertOne(
-  //     { title, date, description },
-  //     (err, result) => {
-  //       if (err) {
-  //         console.log(err);
-  //         return res.status(500).send("Error saving event to the database.");
-  //       }
-  //       console.log("Event saved to the database");
-  //       res.redirect("/calendar");
-  //     }
-  //   );
-  // });
-
-  // app.delete("/calendar/event/:id", isLoggedIn, function (req, res) {
-  //   const eventId = req.params.id;
-
-  //   // Delete the event from the database
-  //   db.collection("events").deleteOne(
-  //     { _id: ObjectId(eventId) },
-  //     (err, result) => {
-  //       if (err) {
-  //         console.log(err);
-  //         return res
-  //           .status(500)
-  //           .send("Error deleting event from the database.");
-  //       }
-  //       res.send("Event deleted!");
-  //     }
-  //   );
-  // });
 
   // ...
   app.get("/getAi", function (req, res) {
