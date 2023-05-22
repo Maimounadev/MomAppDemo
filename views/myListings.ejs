@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<link rel="stylesheet" href="css/myListings.css">
+</head>
+<body>
+<section class="container">
+    <% for(let i = 0; i < data.length; i++){%>
+  <div class="profile">
+    <img src="<%= data[i].item[0].imgPath %>" class="image" />
+    <h2 class="name"><%= data[i].item[0].title %></h2>
+    <h3 class="handle"><%= data[i].item[0].seller %></h3>
+    <h4 class="location">📍 <%= data[i].item[0].address %></h4>
+    <p class="description"><%= data[i].item[0].description %></p>
+    <% if(data[i].item[0].isAvailabale === true){%>
+        <button class="sellToUser">Sell To User</button>
+        <%}else%>
+        <p>Sold</p>
+        <%}%>
+  </div>
+  <%}%>
+</section>  
+
+<script src="myListings.js"></script>
+</body>
+</html>

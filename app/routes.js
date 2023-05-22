@@ -64,7 +64,7 @@ module.exports = function (app, passport, db, multer) {
  
 
   app.post("/sell", isLoggedIn, upload.single("file-to-upload"), (req, res) => {
-    const { title, price, address, description } = req.body;
+    const { title, price, address, description,condition, age } = req.body;
     db.collection("marketplace").save(
       {
         isAvailabale: true,
@@ -74,6 +74,8 @@ module.exports = function (app, passport, db, multer) {
         address,
         seller: req.user.local.email,
         description,
+        age,
+        condition,
         imgPath: "images/uploads/" + req.file.filename,
       },
       (err, result) => {
@@ -83,6 +85,21 @@ module.exports = function (app, passport, db, multer) {
       }
     );
   });
+
+  app.get("/myListings", isLoggedIn, function (req, res) {
+    db.collection("marketplace")
+      .find({ seller: req.user.local.email })
+      .toArray((err, data) => {
+        console.log(data);
+        if (err) return console.log(err);
+        res.render("myListings.ejs", {
+          data,
+          myAddress: req.user.local.address
+        });
+        
+      });
+  });
+
 
   app.get("/purchased", isLoggedIn, function (req, res) {
     db.collection("purchased")
