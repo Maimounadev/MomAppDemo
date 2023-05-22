@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
 body {
-  background: #f2f2f2;
+  background: peachpuff;
   font-family: 'Montserrat', sans-serif;
   display: flex;
   flex-direction: column;
@@ -15,6 +15,7 @@ h1 {
   font-weight: bold;
   font-size: 24px;
   margin-bottom: 20px;
+  color: orange;
 }
 
 #chat-container {
@@ -50,7 +51,7 @@ input[type="text"] {
 
 button.sendMessage {
   margin-left: 10px;
-  background-color: #FF4B2B;
+  background-color: peachpuff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -61,7 +62,7 @@ button.sendMessage {
 }
 
 button.sendMessage:hover {
-  background-color: #FF6C59;
+  background-color: peachpuff;
 }
 
 button.sendMessage:focus {
