@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Dancing+Script&display=swap');
 /* Styles for the entire page */
 body {
     font-family: Arial;
@@ -38,8 +39,10 @@ body {
   /* Styles for the links within the buttons */
   button a {
     text-decoration: none;
-    color: #fff;
+    color: orange;
+
   }
+  
   
   button a:hover {
     color: #fff;
@@ -174,7 +177,7 @@ button, .dots > div, header nav .toggle, header .arrow-down, .menu .box-model .c
   background-color: #fff;
 }
 h1, h3, header .navigation-bar a, header .text span, .menu .box-model .close:hover, footer .text h2, footer .text p, footer .social-media .links a, .contact .text i, .contact .form form button {
-  color: #fff;
+  color: orange;
 }
 header nav, header .navigation-bar.show, header .navigation-bar a:hover .underline, header .navigation-bar li.active .underline, header .text .arrow .left:after, .menu .box-model, .copyright .arrow-up {
   left: 0;
@@ -810,7 +813,7 @@ header .arrow-down {
   padding: 40px 52px 0 0;
 }
 .about-us .text h3, .reservation .text h3 {
-  color: #000;
+  color: orange;
 }
 .about-us .text .fa-asterisk, .reservation .text .fa-asterisk {
   color: #9a9998;

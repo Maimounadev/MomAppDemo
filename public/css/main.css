@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css?family=Dancing+Script&display=swap');
    * {
     box-sizing: border-box;
   }
@@ -12,7 +12,7 @@
   
   p {
     font-size: 15px;
-    color: #FFA07A;
+    color: orange;
     text-align: center;
   }
   
@@ -22,7 +22,7 @@
     text-align: center;
     margin-top: 60px;
     margin-bottom: 40px;
-    color: #FFA07A;
+    color: orange;
   }
   
   .login {
@@ -38,7 +38,7 @@
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #FFA07A;
+    color: orange;
   }
   
   input[type="text"],

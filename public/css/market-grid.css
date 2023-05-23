@@ -14,7 +14,7 @@
   .fake-button{
     border: 1px solid peachpuff;
     background-color: peachpuff;
-    display: block;
+    display: bloc\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\;
   }
   .delete{
     cursor: pointer;
@@ -408,7 +408,7 @@
   #bluepurple:checked ~ main {
     --backgroundColor: #fff;
     --foregroundColor: #111;
-    --primaryColor: #03a9f4;
+    --primaryColor: peachpuff;
     --primaryShade1: #e1f5fe;
     --primaryShade2: #b3e5fc;
     --primaryShade3: #4fc3f7;
@@ -426,7 +426,7 @@
     --accentShade3: #4db6ac;
     --accentShade4: #00796b;
     --accentShade5: #004d40;
-    --accent2Color: #8bc34a;
+    --accent2Color: orange;
     --accent2Shade1: #e7f6d5;
     --accent2Shade2: #c5e1a5;
     --accent2Shade3: #aed581;
