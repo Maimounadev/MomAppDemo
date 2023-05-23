@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Analyze Kids' Cut</title>
+</head>
+<body>
+  <h1>Analyze Kids' Cut</h1>
+
+  <form id="cutForm" enctype="multipart/form-data" action="/analyze-cut" method="POST">
+    <div>
+      <label for="cutImage">Upload Cut Image:</label>
+      <input type="file" id="cutImage" name="cutImage" accept="image/*" required>
+    </div>
+    <button type="submit">Analyze Cut</button>
+  </form>
+
+  <div id="resultContainer">
+    <% if (description) { %>
+      <h3>Analyzed Cut Description:</h3>
+      <p><%= description %></p>
+    <% } %>
+  </div>
+</body>
+</html>

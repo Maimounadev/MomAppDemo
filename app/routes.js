@@ -5,19 +5,33 @@ const accountSid = "AC2378d3d252c198052c00a4d3bafd6d38";
 const authToken = "646c251363ef5ad393f95e4d5a0e8681";
 const client = require("twilio")(accountSid, authToken);
 const { Configuration, OpenAIApi } = require("openai");
+const fs = require('fs'); 
+// delete fs if test fails
 require('dotenv').config();
+// test =======
+const { ComputerVisionClient} = require("@azure/cognitiveservices-computervision");
+const { ApiKeyCredentials } = require("@azure/ms-rest-js");
 
+const key = '27a7070fe6d243be8b914d47e6e5189d';
+const endpoint = 'https://momappdemo.cognitiveservices.azure.com';
+const computerVisionClient = new ComputerVisionClient(
+  new ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': key } }),
+  endpoint
+);
 module.exports = function (app, passport, db, multer) {
   // Image Upload Code =========================================================================
-  var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "public/images/uploads");
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/images/uploads');
     },
-    filename: (req, file, cb) => {
-      cb(null, file.fieldname + "-" + Date.now() + ".png");
-    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
   });
-  var upload = multer({ storage: storage });
+  
+  const upload = multer({ storage: storage });
+  
+ 
 
   // normal routes ===============================================================
 
@@ -62,7 +76,22 @@ module.exports = function (app, passport, db, multer) {
           });
       });
   });
-
+  //  TEST+++++++==========
+  app.post("/upload", upload.single("file"), (req, res) => {
+    // Access the uploaded file using req.file
+    if (!req.file) {
+      // No file was uploaded
+      return res.status(400).send("No file chosen");
+    }
+  
+    // File was uploaded successfully
+    // Handle the uploaded file here
+    console.log("Uploaded file:", req.file);
+  
+    // Send a response indicating success
+    res.status(200).send("File uploaded successfully");
+  });
+  
  
 
   app.post("/sell", isLoggedIn, upload.single("file-to-upload"), (req, res) => {
@@ -143,6 +172,58 @@ module.exports = function (app, passport, db, multer) {
       res.send("Message deleted!");
     });
   });
+  // TEST ===============================================
+// Render the form page for uploading the cut image
+app.get('/analyze-cut', isLoggedIn, function (req, res) {
+  const description = 'Analyzed cut description goes here';
+  res.render('analyze-cut.ejs', { description: description });
+});
+app.post('/analyze-cut', upload.single('image'), function(req, res) {
+  // Get the file path of the uploaded image
+  const imagePath = req.file.path;
+
+  // Set the desired visual features for analysis
+  const features = ['Objects', 'Image_type'];
+  const domainDetails = [];
+
+  // Construct the parameters for analysis
+  const parameters = {
+    visualFeatures: features.join(','),
+    details: domainDetails.join(',')
+  };
+
+  // Perform the image analysis using the specified visual features
+  analyzeCutImage(imagePath, parameters)
+    .then(result => {
+      // Process the analysis result
+      // Your code for processing the analysis result goes here...
+
+      // Add the image URL to the analysis result
+      result.imageUrl = req.file.filename;
+
+      // Send the analysis result as JSON response
+      res.status(200).json(result);
+    })
+    .catch(error => {
+      // Handle the error
+      // Your error handling code goes here...
+      res.status(500).json({ error: 'Image analysis failed' });
+    });
+});
+
+
+// Helper function to analyze the cut image
+async function analyzeCutImage(imagePath) {
+  // Use the Computer Vision client to analyze the image
+  const imageBuffer = fs.readFileSync(imagePath);
+  const result = await computerVisionClient.describeImageInStream(imageBuffer);
+
+  // Extract the description from the result
+  const description = result.captions.length > 0 ? result.captions[0].text : 'Unable to analyze the cut image';
+
+  return description;
+}
+
 
   // PROFILE SECTION =========================
   app.get("/profile", isLoggedIn, function (req, res) {

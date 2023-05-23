@@ -10,6 +10,47 @@ body {
   height: 100vh;
   margin: 0;
 }
+.navigation-bar {
+  padding: 20px;
+}
+
+.navigation-bar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.navigation-bar li {
+  margin: 0 10px;
+}
+
+.navigation-bar a {
+  color: orange;
+  text-decoration: none;
+  position: relative;
+}
+
+.navigation-bar a:hover {
+  color: orange;
+  background-color: white;
+}
+
+.navigation-bar a:hover .underline {
+  width: 100%;
+}
+
+.underline {
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: orange;
+  transition: width 0.3s ease-in-out;
+}
+
 
 h1 {
   font-weight: bold;
