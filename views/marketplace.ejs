@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script src=“https://kit.fontawesome.com/d74d0e70eb.js” crossorigin=“anonymous”></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
@@ -22,6 +23,15 @@
     <link rel="stylesheet" href="css/market-grid.css" />
   </head>
   <body>
+    <div class="navigation-bar">
+      <ul>
+          <li class="active"><a href="index.html">Home<span class="underline"></span></a></li>
+          <li><a href="/getAi">Ask Us Some Questions<span class="underline"></span></a></li>
+          <li><a href="/enterChat">Chat with other moms<span class="underline"></span></a></li>
+          <li><a href="/marketplace">Shop<span class="underline"></span></a></li>
+          
+      </ul>
+  </div>
     <input
       class="variation"
       id="bluepurple"
@@ -160,16 +170,20 @@
           <div class="profile__stats">
             <p class="profile__stats__title">Location</p>
             <h5><%= items[i].address %></h5>
+            <span class="delete" data-id="<%= items[i]._id %>">x</span>
           </div>
+          
 
           <div class="profile__cta">
-            
-            <% if(boughtItems.includes(items[i]._id)){ %>
+            <% if(items[i].seller === user){ %>
+              <span class="button buy fake-button">Your Listing</span>
+            <% }else if(boughtItems.includes(items[i]._id)){ %>
             <button type="submit" class="button buy">Purchased</button>
 
             <% } else{ %>
             <form action="/purchase/<%= items[i]._id%>" method="post">
               <button type="submit" class="button buy">Purchase Item</button>
+              
             </form>
             <% } %>
           </div>

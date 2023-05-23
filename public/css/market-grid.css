@@ -11,6 +11,14 @@
     text-align: center;
     transition: all 0.3s ease;
   }
+  .fake-button{
+    border: 1px solid peachpuff;
+    background-color: peachpuff;
+    display: block;
+  }
+  .delete{
+    cursor: pointer;
+  }
   
   * {
     box-sizing: border-box;

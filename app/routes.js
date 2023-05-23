@@ -53,6 +53,7 @@ module.exports = function (app, passport, db, multer) {
               boughtItems.push(result[i].item[0]._id);
             }
             res.render("marketplace.ejs", {
+              user: req.user.local.email,
               items,
               result,
               boughtItems: boughtItems,

@@ -2,11 +2,20 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
+  <script src=“https://kit.fontawesome.com/d74d0e70eb.js” crossorigin=“anonymous”></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 <link rel="stylesheet" href="./css/purchased.css">
 <link rel="stylesheet" href="./css/map.css">
 </head>
 <body>
+  <div class="navigation-bar">
+    <ul>
+        <li class="active"><a href="index.html">Home<span class="underline"></span></a></li>
+        <li><a href="/getAi">Ask Us Some Questions<span class="underline"></span></a></li>
+        <li><a href="/enterChat">Chat with other moms<span class="underline"></span></a></li>
+        <li><a href="/marketplace">Shop<span class="underline"></span></a></li>
+    </ul>
+</div>
 <!-- partial:index.partial.html -->
 <section class="container">
     <% for(let i = 0; i < data.length; i++){%>
@@ -31,7 +40,6 @@
 </section>  
 
   
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjF4bqBu5j4eX7WU_EUnvlFRTkvs8iLac&libraries=places"></script>
 <script src="./maps.js"></script>
 </body>

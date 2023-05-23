@@ -1,4 +1,7 @@
+let trash = document.getElementsByClassName('delete')
+
 //apprearance
+
 document.querySelectorAll("input.variation").forEach(function (element) {
   element.addEventListener("click", function () {
     if (parseInt(this.value) > 3) {
@@ -77,3 +80,24 @@ function filterByPrice(e) {
     });
     console.log(data.url)
 }
+Array.from(trash).forEach(function (element) {
+  element.addEventListener("click", function (e) {
+    const _id = e.target.dataset.id;
+    // const name = this.parentNode.parentNode.childNodes[1].innerText;
+    // const msg = this.parentNode.parentNode.childNodes[3].innerText;
+    fetch("marketplace", {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _id,
+      }),
+    }).then(function (response) {
+      window.location.reload();
+    });
+  });
+});
+
+
+
