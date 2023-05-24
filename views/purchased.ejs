@@ -1,48 +1,67 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<link rel="stylesheet" href="./css/purchased.css">
-<link rel="stylesheet" href="./css/map.css">
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<section class="container">
-    <% for(let i = 0; i < data.length; i++){%>
-  <div class="profile">
-    <img src="<%= data[i].item[0].imgPath %>" class="image" />
-    <h2 class="name"><%= data[i].item[0].title %></h2>
-    <h3 class="handle"><%= data[i].item[0].seller %></h3>
-    <h4 class="location">📍 <%= data[i].item[0].address %></h4>
-    <p class="description"><%= data[i].item[0].description %></p>
-    <button id="four" data-address="<%= data[i].item[0].address %>" class="open">Get Directions</button>
-  </div>
-  <%}%>
-</section>  
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+    />
+    <link rel="stylesheet" href="./css/purchased.css" />
+    <link rel="stylesheet" href="./css/map.css" />
+  </head>
+  <body>
+    <!-- partial:index.partial.html -->
+    <section class="container">
+      <% for(let i = 0; i < data.length; i++){%> 
+        <div class="profile">
+          <img src="<%= data[i].item[0].imgPath %>" class="image" />
+          <h2 class="name"><%= data[i].item[0].title %></h2>
+          <h3 class="handle"><%= data[i].item[0].seller %></h3>
+          <h4 class="location">📍 <%= data[i].item[0].address %></h4>
+          <p class="description"><%= data[i].item[0].description %></p>
+        <% for(let x = 0; x < listings.length; x++){%>
+      
+        <% if(listings[x].title === (data[i].item[0].title) && listings[x].buyer === myEmail){%>
+        <p>Sold To You</p>
+          
+        <button
+          id="four"
+          data-address="<%= data[i].item[0].address %>"
+          class="open"
+        >
+          Get Directions
+        </button>
+      
+        <%} else if(listings[x].title === data[i].item[0].title) {%>
+          <p>Pending</p>
+        <%}%>
+        <%}%> 
+      </div>
+      <%}%>
 
-  <!-- pop up modal with the directions logic -->
-  <div id="popup-modal-container">
-    <div class="modal-background">
-      <div class="modal">
-        <h1>Get Directions</h1>
-        <div id="googleMap">
+    </section>
+
+    <!-- pop up modal with the directions logic -->
+    <div id="popup-modal-container">
+      <div class="modal-background">
+        <div class="modal">
+          <h1>Get Directions</h1>
+          <div id="googleMap"></div>
+          <input
+            id="from"
+            placeholder="your location"
+            value="<%= myAddress %>"
+          />
+          <input id="to" placeholder="your destination" />
+          <button class="get"><h3>generate</h3></button>
+          <div id="output"></div>
+          <ul id="steps"></ul>
         </div>
-        <input
-          id="from"
-          placeholder="your location"
-          value="<%= myAddress %>"
-        />
-        <input id="to" placeholder="your destination" />
-        <button class="get"><h3>generate</h3></button>
-        <div id="output"></div>
-        <ul id="steps"></ul>
       </div>
     </div>
-  </div>
-  <!-- end of modal -->
+    <!-- end of modal -->
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjF4bqBu5j4eX7WU_EUnvlFRTkvs8iLac&libraries=places"></script>
-<script src="./maps.js"></script>
-</body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjF4bqBu5j4eX7WU_EUnvlFRTkvs8iLac&libraries=places"></script>
+    <script src="./maps.js"></script>
+  </body>
 </html>

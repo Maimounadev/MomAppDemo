@@ -1,5 +1,5 @@
 let trash = document.getElementsByClassName('delete')
-
+let edit = document.getElementsByClassName('edit')
 //apprearance
 
 document.querySelectorAll("input.variation").forEach(function (element) {
@@ -99,5 +99,30 @@ Array.from(trash).forEach(function (element) {
   });
 });
 
-
+for (let e of edit){
+  e.addEventListener('click', function(){
+    console.log(this.parentNode.childNodes)
+    const input = this.parentNode.childNodes[1]
+    input.focus()
+    input.select()
+    input.addEventListener('keyup', editText)
+  })
+}
+function editText(event){
+  const newText = event.target.value
+  const id = event.target.dataset.id // data attribute, in HTML is used to store valuable information that we need access to.
+  console.log(id, newText)
+  fetch('edit', {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id, newText
+    })
+  })
+  .then(function (response) {
+    // window.location.reload()
+  })
+}
 

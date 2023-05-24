@@ -15,12 +15,19 @@
   .fake-button{
     border: 1px solid peachpuff;
     background-color: peachpuff;
-    display: bloc\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\;
+    height: 60px;
+    text-align: center;
+    display: block;
+    color: white;
+    margin: 10%;
   }
   .delete{
     cursor: pointer;
   }
-  
+  .lab {
+    width: 100%;
+    padding: 15px;
+  }
   * {
     box-sizing: border-box;
   }

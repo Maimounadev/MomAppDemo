@@ -58,65 +58,9 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 
-// Socket.io Chat =======
-// RUN WHEN CLIENT CONNECTS ==========================
-io.on('connection', socket => {
-  socket.on('joinRoom', ({ username, room}) => {
-const user = userJoin(socket.id, username, room)
 
 
-socket.join(user.room)
-// WELCOME CURRENT USER =================
-  socket.emit('message', formatMessage(botName, 'Welcome to your group chat!'))
 
-
-// BROADCAST WHEN A USER CONNECTS ===================
-socket.broadcast
-.to(user.room)
-.emit(
-  'message',  
-  formatMessage(botName, `${user.username} has joined the chat`))
-
-  // SEND USERS AND ROOM INFO =======
-  io.to(user.room).emit('roomUsers', {
-    room: user.room,
-    users: getRoomUsers(user.room)
-  })
-})
-
-
-// LISTEN FOR ChatMessage ===============
-socket.on('chatMessage', (msg) => {
-  const user = getCurrentUser(socket.id)
-
-io.to(user.room).emit('message',  formatMessage(user.username, msg))
-})
-
-// PRIVATE ROOM ============
-socket.on('chatInviteRoom', (privateRoom) => {
-  const user = getCurrentUser(socket.id)
-  console.log(user, privateRoom)
-io.to(user.room).emit('inviteRoom',privateRoom)
-})
-
-
-// RUNS WHEN CLIENT DISCONNECTS =============
-socket.on("disconnect", () => {
-  const user = userLeave(socket.id);
-
-  if (user) {
-    io.to(user.room).emit(
-      "message",
-      formatMessage(botName, `${user.username} has left the chat`)
-    );
-    // Send users and room info
-    io.to(user.room).emit("roomUsers", {
-      room: user.room,
-      users: getRoomUsers(user.room)
-})     
-}
-})
-})
 
 // launch ======================================================================
 server.listen(port);

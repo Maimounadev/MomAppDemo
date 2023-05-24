@@ -5,33 +5,25 @@ const accountSid = "AC2378d3d252c198052c00a4d3bafd6d38";
 const authToken = "646c251363ef5ad393f95e4d5a0e8681";
 const client = require("twilio")(accountSid, authToken);
 const { Configuration, OpenAIApi } = require("openai");
-const fs = require('fs'); 
+const fs = require("fs");
+const { captureRejectionSymbol } = require("events");
+const stripe = require("stripe")(process.env.SECRET_KEY);
 // delete fs if test fails
-require('dotenv').config();
+require("dotenv").config();
 // test =======
-const { ComputerVisionClient} = require("@azure/cognitiveservices-computervision");
-const { ApiKeyCredentials } = require("@azure/ms-rest-js");
 
-const key = '27a7070fe6d243be8b914d47e6e5189d';
-const endpoint = 'https://momappdemo.cognitiveservices.azure.com';
-const computerVisionClient = new ComputerVisionClient(
-  new ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': key } }),
-  endpoint
-);
 module.exports = function (app, passport, db, multer) {
   // Image Upload Code =========================================================================
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/images/uploads');
+      cb(null, "public/images/uploads");
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname);
-    }
+    },
   });
-  
+
   const upload = multer({ storage: storage });
-  
- 
 
   // normal routes ===============================================================
 
@@ -41,23 +33,13 @@ module.exports = function (app, passport, db, multer) {
     res.render("signup.ejs");
   });
 
-  app.get("/groupChat", isLoggedIn, function (req, res) {
-    res.render("chat.ejs", {
-      user: req.user.local,
-    });
-  });
-
-  app.get("/enterChat", isLoggedIn, function (req, res) {
-    res.render("enterChat.ejs", {
-      user: req.user.local,
-    });
-  });
-
   app.get("/marketplace", isLoggedIn, function (req, res) {
     let boughtItems = [];
-    let filter = req.query.price ? {price: parseInt(req.query.price )} : undefined
+    let filter = req.query.price
+      ? { price: parseInt(req.query.price) }
+      : undefined;
     db.collection("marketplace")
-      .find( filter)
+      .find(filter)
       .toArray((err, items) => {
         db.collection("purchased")
           .find()
@@ -76,26 +58,9 @@ module.exports = function (app, passport, db, multer) {
           });
       });
   });
-  //  TEST+++++++==========
-  app.post("/upload", upload.single("file"), (req, res) => {
-    // Access the uploaded file using req.file
-    if (!req.file) {
-      // No file was uploaded
-      return res.status(400).send("No file chosen");
-    }
-  
-    // File was uploaded successfully
-    // Handle the uploaded file here
-    console.log("Uploaded file:", req.file);
-  
-    // Send a response indicating success
-    res.status(200).send("File uploaded successfully");
-  });
-  
- 
 
   app.post("/sell", isLoggedIn, upload.single("file-to-upload"), (req, res) => {
-    const { title, price, address, description,condition, age } = req.body;
+    const { title, price, address, description, condition, age } = req.body;
     db.collection("marketplace").save(
       {
         isAvailabale: true,
@@ -117,6 +82,76 @@ module.exports = function (app, passport, db, multer) {
     );
   });
 
+  // test =================
+
+
+  app.put('/edit', (req, res) => {
+    console.log(req.body)
+    db.collection('marketplace').findOneAndUpdate({ _id: ObjectId(req.body.id) },
+   {
+    $set: {
+      msg: req.body.newText
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: true
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.send(result)
+  })
+})
+
+
+  // stripe
+  app.get("/cancel", isLoggedIn, function (req, res) {
+    db.collection("messages")
+      .find()
+      .toArray((err, result) => {
+        if (err) return console.log(err);
+        const isNewMom = req.user.local.momType == "first-time-mom";
+        // if (isNewMom) {
+        //   res.render('newMomProfile.ejs')
+        // }
+        // else{
+        res.render("cancel.ejs", {
+          user: req.user.local,
+          messages: result,
+        });
+        // }
+      });
+  });
+
+// post for checkout
+
+app.post("/success", isLoggedIn, upload.single("file-to-upload"), (req, res) => {
+  const { title, price, address, description, condition, age } = req.body;
+  db.collection("marketplace").save(
+    {
+      isAvailabale: true,
+      buyer: "noBody",
+      title,
+      price: Number(price),
+      address,
+      seller: req.user.local.email,
+      description,
+      age,
+      condition,
+      imgPath: "images/uploads/" + req.file.filename,
+    },
+    (err, result) => {
+      if (err) return console.log(err);
+      console.log("saved to database");
+      res.redirect("/success.ejs");
+    }
+  );
+});
+
+
+  // stripe
+
+  
+
+
   app.get("/listings", isLoggedIn, function (req, res) {
     db.collection("marketplace")
       .find({ seller: req.user.local.email })
@@ -127,13 +162,54 @@ module.exports = function (app, passport, db, multer) {
           .find()
           .toArray((err, result) => {
             if (err) return console.log(err);
-        res.render("purchasedTwo.ejs", {
-          data,
-          result,
-          myAddress: req.user.local.address
-        });
-      })
+            res.render("purchasedTwo.ejs", {
+              data,
+              result,
+              myAddress: req.user.local.address,
+            });
+          });
       });
+  });
+
+  app.put("/listings", (req, res) => {
+    db.collection("marketplace").findOneAndUpdate(
+      { _id: ObjectId(req.body.itemId) },
+      {
+        $set: {
+          buyer: req.body.buyer,
+          isAvailabale: false,
+        },
+      },
+      {
+        sort: { _id: -1 },
+        upsert: true,
+      },
+      (err, result) => {
+        if (err) return res.send(err);
+        res.send(result);
+      }
+    );
+  });
+
+  app.post("/editListing", (req, res) => {
+    console.log(req.body)
+    db.collection("marketplace").findOneAndUpdate(
+      { _id: ObjectId(req.body.itemId) },
+      {
+        $set: {
+         description: req.body.description
+       
+        },
+      },
+      {
+        sort: { _id: -1 },
+        upsert: true,
+      },
+      (err, result) => {
+        if (err) return res.send(err);
+        res.redirect('/listings');
+      }
+    );
   });
 
 
@@ -143,10 +219,18 @@ module.exports = function (app, passport, db, multer) {
       .toArray((err, data) => {
         console.log(data);
         if (err) return console.log(err);
-        res.render("purchased.ejs", {
-          data,
-          myAddress: req.user.local.address,
-        });
+        db.collection("marketplace")
+          .find()
+          .toArray((err, listings) => {
+            console.log(listings);
+            if (err) return console.log(err);
+            res.render("purchased.ejs", {
+              data,
+              myEmail: req.user.local.email,
+              myAddress: req.user.local.address,
+              listings: listings,
+            });
+          });
       });
   });
 
@@ -172,58 +256,6 @@ module.exports = function (app, passport, db, multer) {
       res.send("Message deleted!");
     });
   });
-  // TEST ===============================================
-// Render the form page for uploading the cut image
-app.get('/analyze-cut', isLoggedIn, function (req, res) {
-  const description = 'Analyzed cut description goes here';
-  res.render('analyze-cut.ejs', { description: description });
-});
-app.post('/analyze-cut', upload.single('image'), function(req, res) {
-  // Get the file path of the uploaded image
-  const imagePath = req.file.path;
-
-  // Set the desired visual features for analysis
-  const features = ['Objects', 'Image_type'];
-  const domainDetails = [];
-
-  // Construct the parameters for analysis
-  const parameters = {
-    visualFeatures: features.join(','),
-    details: domainDetails.join(',')
-  };
-
-  // Perform the image analysis using the specified visual features
-  analyzeCutImage(imagePath, parameters)
-    .then(result => {
-      // Process the analysis result
-      // Your code for processing the analysis result goes here...
-
-      // Add the image URL to the analysis result
-      result.imageUrl = req.file.filename;
-
-      // Send the analysis result as JSON response
-      res.status(200).json(result);
-    })
-    .catch(error => {
-      // Handle the error
-      // Your error handling code goes here...
-      res.status(500).json({ error: 'Image analysis failed' });
-    });
-});
-
-
-// Helper function to analyze the cut image
-async function analyzeCutImage(imagePath) {
-  // Use the Computer Vision client to analyze the image
-  const imageBuffer = fs.readFileSync(imagePath);
-  const result = await computerVisionClient.describeImageInStream(imageBuffer);
-
-  // Extract the description from the result
-  const description = result.captions.length > 0 ? result.captions[0].text : 'Unable to analyze the cut image';
-
-  return description;
-}
-
 
   // PROFILE SECTION =========================
   app.get("/profile", isLoggedIn, function (req, res) {
@@ -286,52 +318,6 @@ async function analyzeCutImage(imagePath) {
     })
   );
 
-  // Calendar routes ===============================================================
-
-  // Display the calendar page
-  const { ObjectId } = require("mongodb");
-
-
-  // ...
-  app.get("/getAi", function (req, res) {
-    res.render("Ai.ejs",{
-      answer: null
-    });
-  });
-
-
-  // open ai
-
-  app.post("/getAi", async (req, res) => {
-    console.log(req.body);
-    
-  
-    try {
-      console.log('key' ,process.env.OPENAI_API_KEY)
-      const configuration = new Configuration({
-        apiKey: process.env.OPENAI_API_KEY,
-      });
-  
-      const openai = new OpenAIApi(configuration);
-      const prompt = req.body.question;
-      // let prompt = "How much Tylenol can I give a 6-month-old:";
-      
-      console.log(prompt);
-  
-      const completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
-      });
-  
-      const answer = completion.data.choices[0].message.content;
-      console.log(completion.data.choices[0].message);
-  
-      res.render("Ai.ejs", { answer });
-    } catch (error) {
-      console.error("Error generating dose:", error);
-      res.status(500).json({ error: "Failed to generate dose" });
-    }
-  });
   // ===================================================
 
   app.get("/welcome-msg", function (req, res) {

@@ -88,6 +88,7 @@
               <input type="text" name="address" value="<%= myAddress %>" />
               <input type="file" name="file-to-upload" />
               <button type="submit" value="Upload">Post</button>
+              
             </form>
           </div>
           <h6>Filters</h6>
@@ -180,6 +181,9 @@
             <% }else if(boughtItems.includes(items[i]._id)){ %>
             <button type="submit" class="button buy">Purchased</button>
 
+            <% }else if(items[i].isAvailabale === false){ %>
+              <span class="button buy fake-button">Sold</span>
+
             <% } else{ %>
             <form action="/purchase/<%= items[i]._id%>" method="post">
               <button type="submit" class="button buy">Purchase Item</button>
@@ -190,6 +194,11 @@
         </div>
         <% } %>
       </section>
+      
+  <!-- test -->
+  
+  <button type="submit">Save Changes</button>
+</form>
     </main>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjF4bqBu5j4eX7WU_EUnvlFRTkvs8iLac&libraries=places"></script>

@@ -29,11 +29,7 @@
     <% if(data[i].isAvailabale === true){%>
       <% for(let x = 0; x < result.length; x++){%>
         <% if(data[i]._id.equals(result[x].item[0]._id)){%>
-          <form action="/editListing" method="post">
-          <textarea name="description" class="description"><%= data[i].description %></textarea>
-          <input type="hidden" name="itemId" value="<%= data[i]._id %>">
-          <button type="submit">Update Description</button>
-        </form>
+          <p class="description">!!!!!<%= result[x].user %></p>
       <button class="sellToUser" data-seller="<%= result[x].user %>" data-itemId="<%=result[x].item[0]._id %>">Sell To User</button>
       <%}%>
       <%}%>
